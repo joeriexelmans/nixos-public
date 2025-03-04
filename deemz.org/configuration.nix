@@ -1,0 +1,342 @@
+# Edit this configuration file to define what should be installed on
+# your system.  Help is available in the configuration.nix(5) man page
+# and in the NixOS manual (accessible by running ‘nixos-help’).
+
+{ config, pkgs, ... }:
+let secrets = import ../secrets.nix; in
+{
+  imports =
+    [ # Include the results of the hardware scan.
+      ./hardware-configuration.nix
+    ];
+
+  hardware.firmware = [
+    (
+      pkgs.runCommand "edid.bin" { } ''
+        mkdir -p $out/lib/firmware/edid
+        cp ${./nec-v462-edid-patched.bin} $out/lib/firmware/edid/edid.bin
+      ''
+    )
+  ];
+
+  nixpkgs.config.allowUnfree = true;
+
+  # Use the systemd-boot EFI boot loader.
+  #boot.loader.grub.device = "/dev/sda";
+  boot.loader.grub.configurationLimit = 10;
+  boot.loader.systemd-boot.enable = true;
+ 
+  time.timeZone = "Europe/Amsterdam";
+  i18n.defaultLocale = "en_US.UTF-8";
+  console = {
+    font = "Lat2-Terminus16";
+    keyMap = "us";
+  };
+
+  services.fwupd.enable = true;
+
+  # Enable the X11 windowing system.
+  services.xserver.enable = true;
+  # Enable the GNOME Desktop Environment.
+  services.xserver.displayManager.gdm.enable = true;
+  services.xserver.desktopManager.gnome.enable = true;
+  services.xserver.videoDrivers = [ "modesetting" ];
+  services.xserver.deviceSection = ''
+    Option "TearFree" "true"
+  '';
+
+  services.displayManager.autoLogin = {
+    enable = true;
+    user= "maestro";
+  };
+  services.displayManager.preStart = ''
+    # Enable full range of RGB values in HDMI output
+    ${pkgs.libdrm.bin}/bin/proptest -M i915 -D /dev/dri/card1 95 connector 97 1
+  '';
+  # Workaround for GDM crashing on autologin:
+  # https://github.com/NixOS/nixpkgs/issues/103746
+  systemd.services."getty@tty1".enable = false;
+  systemd.services."autovt@tty1".enable = false;
+
+  services.xserver.xkb.layout = "us";
+  services.xserver.xkb.options = "eurosign:e";
+
+  security.rtkit.enable = true;
+  services.pulseaudio.enable = false;
+  services.pipewire = {
+    enable = true;
+    alsa.enable = true;
+    alsa.support32Bit = true;
+    pulse.enable = true;
+    extraConfig = import ./pipewire-extra-config.nix;
+  };
+
+  nixpkgs.config.packageOverrides = pkgs: {
+    vaapiIntel = pkgs.vaapiIntel.override { enableHybridCodec = true; };
+  };
+  hardware.graphics.enable = true;
+  hardware.graphics.extraPackages = with pkgs; [
+    intel-media-driver
+    vaapiIntel
+    intel-compute-runtime # OpenCL filter support
+  ];
+
+  # Enable touchpad support (enabled default in most desktopManager).
+  services.libinput.enable = true;
+
+
+  # List packages installed in system profile. To search, run:
+  environment.systemPackages = with pkgs; [
+    vim
+    firefox
+    git
+    pavucontrol
+    vlc
+    transmission-remote-gtk
+    helvum
+    chromium
+    kodi
+    libdrm # proptest
+    (goaccess.override {
+      withGeolocation = true;
+    })
+    jq
+    rygel # UPnP media renderer
+  ];
+
+  users.users.maestro = {
+    isNormalUser = true;
+    extraGroups = [ "wheel" ]; # Enable ‘sudo’ for the user.
+  };
+
+  programs.gnupg.agent = {
+    enable = true;
+   # enableSSHSupport = true;
+  };
+
+
+  networking.hostName = "seedbox"; # Define your hostname.
+  networking.useDHCP = false;
+  networking.interfaces.enp1s0 = {
+    useDHCP = false;
+    ipv4.addresses = [
+      {
+        address = "192.168.1.60";
+        prefixLength = 24;
+      }
+    ];
+    ipv6.addresses = [
+      {
+        address = "2a02:578:8591:1b00::ffff";
+        prefixLength = 64;
+      }
+    ];
+  };
+  networking.enableIPv6 = true;
+  networking.defaultGateway = "192.168.1.1";
+  networking.defaultGateway6 = {
+    address = "fe80::52d4:f7ff:fe28:9849"; # TP-Link router
+    interface = "enp1s0";
+  };
+  networking.nameservers = [ "1.1.1.1" ];
+  networking.extraHosts = ''
+    192.168.1.60             mstro.duckdns.org
+    192.168.1.60             deemz.org
+  '';
+    # 2a02:578:8591:1b00::ffff mstro.duckdns.org
+  networking.networkmanager.unmanaged = [ "enp1s0" ];
+
+  # IPv6 is enabled, meaning we're not protected by NAT -> enable firewall
+  networking.firewall = {
+    enable = true;
+    allowedTCPPorts = [
+      22
+      #53
+      80
+      443
+      51413 # Transmission
+    ];
+    allowedUDPPorts = [
+      #53
+      51413 # Transmission
+    ];
+    # Accept all traffic from local network:
+    extraCommands = ''
+      iptables -A nixos-fw -p tcp --source 192.168.1.0/24 -j nixos-fw-accept
+      iptables -A nixos-fw -p udp --source 192.168.1.0/24 -j nixos-fw-accept
+      ip6tables -A nixos-fw -p tcp --source 2A02:578:8591:1B00::/64 -j nixos-fw-accept
+      ip6tables -A nixos-fw -p udp --source 2A02:578:8591:1B00::/64 -j nixos-fw-accept
+    '';
+  };
+
+  # Users specifically for sending dynamic DNS updates
+  users.users.duckdns = {
+    isSystemUser = true;
+    group = "dyndns";
+  };
+  users.users.cloudflare-dns = {
+    isSystemUser = true;
+    group = "dyndns";
+  };
+  users.groups.dyndns = {}; # create this user
+  # Send DNS updates
+  services.cron = {
+    enable = true;
+    systemCronJobs = [
+      # Update DuckDNS - use 'journalctl -e' to see logged output (should log 'OK' every 5 minutes)
+      "*/5 * * * * duckdns curl 'https://www.duckdns.org/update?domains=mstro&token=${duckdns-token}&ip=' | systemd-cat -t 'duckdns'"
+      # Update CloudFlare DNS
+      "*/1 * * * * cloudflare-dns curl --request PUT --url https://api.cloudflare.com/client/v4/zones/${secrets.cloudflare_zone_id}/dns_records/${secrets.cloudflare_dns_record_id} --header 'Content-Type: application/json' --header 'Authorization: Bearer ${secrets.cloudflare_api_token}' --data '{ \"comment\": \"Domain verification record\", \"name\": \"@\", \"proxied\": false, \"settings\": {}, \"tags\": [], \"ttl\": 60, \"content\": \"'$(curl https://ipinfo.io/ip)'\", \"type\": \"A\" }' | jq -r '.success' | systemd-cat -t 'cloudflare-dns'"
+    ];
+  };
+
+  services.openssh.enable = true;
+  services.openssh.settings.PasswordAuthentication = false;
+  services.openssh.banner = ''
+    Howdy, partner!
+  '';
+
+  # DNSMasq will override the DNS entry for /etc/hosts entries
+  services.dnsmasq = {
+    enable = true;
+    settings = {
+      server = [
+        "1.1.1.1" # Cloudflare primary
+        "1.0.0.1" # Cloudflare secondary
+        "8.8.8.8" # Google primary
+        "8.8.4.4" # Google secondary
+        "2606:4700:4700::1111" # Cloudflare primary
+        "2606:4700:4700::1001" # Cloudflare secondary
+        "2a02:578:8000:2:212:71:0:33" # Edpnet primary
+        "2a02:578:1001:3:212:71:8:10" # Edpnet secondary
+      ];
+      listen-address = "::1,2a02:578:8591:1b00::ffff,127.0.0.1,192.168.1.60";
+      cache-size = 10000;
+    };
+  };
+
+  # NGINX
+  services.nginx = let
+    userlist = secrets.nginx_userlist;
+    commonConfig = {
+      root = "/schijf";
+      locations."/" = {
+        basicAuth = userlist;
+        extraConfig = ''
+          autoindex on;
+        '';
+        proxyWebsockets = true;
+      };
+      locations."/public" = {
+        basicAuth = {};
+        extraConfig = ''
+          autoindex off;
+        '';
+      };
+      locations."/plantuml" = {
+        basicAuth = {};
+        extraConfig = ''
+          autoindex off;
+        '';
+        proxyPass = "http://127.0.0.1:8080/plantuml";
+        proxyWebsockets = true;
+      };
+      locations."/transmission/web/" = {
+        basicAuth = userlist;
+        proxyPass = "http://127.0.0.1:9091/transmission/web/";
+        proxyWebsockets = true;
+      };
+      locations."/transmission/rpc" = {
+        basicAuth = userlist;
+        proxyPass = "http://127.0.0.1:9091/transmission/rpc";
+        proxyWebsockets = true;
+      };
+      locations."/jellyfin/" = {
+        #basicAuth = userlist;
+        proxyPass = "http://127.0.0.1:8096/jellyfin/";
+        proxyWebsockets = true;
+        extraConfig = ''
+          proxy_buffering off;
+        '';
+      };
+      locations."/git/" = {
+        basicAuth = {};
+        proxyPass = "http://127.0.0.1:27365/";
+        proxyWebsockets = true;
+      };
+      forceSSL = true;
+      enableACME = true;
+
+
+      extraConfig = ''
+        charset UTF-8;
+        disable_symlinks off;
+        more_set_headers 'Server: nginx on NixOS';
+      '';
+    };
+  in {
+    enable = true;
+
+    recommendedGzipSettings = true;
+    recommendedOptimisation = true;
+    recommendedProxySettings = true;
+    recommendedTlsSettings = true;
+
+    # Access from internet: encrypted, authenticated (except '/public')
+    virtualHosts."mstro.duckdns.org" = commonConfig // {
+      serverName = "mstro.duckdns.org";
+    };
+    virtualHosts."deemz.org" = commonConfig // {
+      serverName = "deemz.org";
+    };
+  };
+  security.acme = {
+    acceptTerms = true;
+    certs = {
+      "mstro.duckdns.org".email = "joeri.exelmans@gmail.com";
+      "deemz.org".email = "joeri.exelmans@gmail.com";
+    };
+  };
+
+  services.plantuml-server = {
+    enable = true;
+    plantumlLimitSize = 40000;
+  };
+
+  services.jellyfin.enable = true;
+
+  services.forgejo = {
+    enable = true;
+    settings.server.ROOT_URL = "https://deemz.org/git/";
+    settings.server.HTTP_PORT = 27365;
+    settings.service.DISABLE_REGISTRATION = true;
+  };
+
+  services.transmission = {
+    enable = true;
+    package = pkgs.transmission_3;
+    settings = {
+      peer-port = 51413;
+      rpc-enabled = true;
+      rpc-authentication-required = false;
+      rpc-bind-address = "0.0.0.0";
+      rpc-whitelist-enabled = false;
+      rpc-host-whitelist-enabled = false;
+    };
+    home = "/schijf/transmission";
+    downloadDirPermissions = "775"; # transmission: read+write+exec, other: read+exec
+  };
+
+
+  # UPnP media playback (local network only)
+  services.gnome.rygel.enable = true;
+
+
+  # This value determines the NixOS release from which the default
+  # settings for stateful data, like file locations and database versions
+  # on your system were taken. It‘s perfectly fine and recommended to leave
+  # this value at the release version of the first install of this system.
+  # Before changing this value read the documentation for this option
+  # (e.g. man configuration.nix or on https://nixos.org/nixos/options.html).
+  system.stateVersion = "21.11"; # Did you read the comment?
+}
