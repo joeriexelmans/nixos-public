@@ -77,6 +77,7 @@
     xkb.variant = ""; # ?
   };
   services.libinput.enable = true;
+  services.libinput.mouse.middleEmulation = false; # middle mouse button emulation (left+right = middle)
 
   # T14 Gen3 trackpoint is way too sensitive by default:
   hardware.trackpoint = {

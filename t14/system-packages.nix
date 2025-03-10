@@ -40,6 +40,7 @@ in [
   gnome-calculator
   gnome-disk-utility
   file-roller
+  xfce.xfce4-weather-plugin
 
   # Programming
   git
