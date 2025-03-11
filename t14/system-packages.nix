@@ -41,6 +41,7 @@ in [
   gnome-disk-utility
   file-roller
   xfce.xfce4-weather-plugin
+  alacritty
 
   # Programming
   git
@@ -50,6 +51,7 @@ in [
   graphviz
   sublime4Cracked
   sublime-merge
+  vscode
 
   # Network thingy
   chromium
