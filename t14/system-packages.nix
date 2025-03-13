@@ -42,6 +42,7 @@ in [
   file-roller
   xfce.xfce4-weather-plugin
   alacritty
+  xorg.xkill
 
   # Programming
   git
