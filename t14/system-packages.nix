@@ -102,6 +102,7 @@ in [
   audacity
   cheese
   playerctl # command line media control (play/pause)
+  finamp
 
   # Belgian eID software and hardware drivers
   eid-mw
