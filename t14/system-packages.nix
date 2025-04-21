@@ -23,6 +23,7 @@ let
   });
 in [
   # Utility
+  lf
   tree
   unzip
   killall
