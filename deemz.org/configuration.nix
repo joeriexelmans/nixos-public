@@ -224,6 +224,7 @@ let secrets = import ../secrets.nix; in
         basicAuth = userlist;
         extraConfig = ''
           autoindex on;
+          add_header Cache-Control max-age=172800
         '';
         proxyWebsockets = true;
       };
