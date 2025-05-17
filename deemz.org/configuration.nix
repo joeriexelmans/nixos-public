@@ -116,6 +116,8 @@ let secrets = import ../secrets.nix; in
 
 
   networking.hostName = "seedbox"; # Define your hostname.
+  networking.domain = "deemz.org";
+  networking.fqdn = "deemz.org";
   networking.useDHCP = false;
   networking.interfaces.enp1s0 = {
     useDHCP = false;
@@ -184,7 +186,7 @@ let secrets = import ../secrets.nix; in
     enable = true;
     systemCronJobs = [
       # Update DuckDNS - use 'journalctl -e' to see logged output (should log 'OK' every 5 minutes)
-      "*/5 * * * * duckdns curl 'https://www.duckdns.org/update?domains=mstro&token=${duckdns-token}&ip=' | systemd-cat -t 'duckdns'"
+      "*/5 * * * * duckdns curl 'https://www.duckdns.org/update?domains=mstro&token=${secrets.duckdns_token}&ip=' | systemd-cat -t 'duckdns'"
       # Update CloudFlare DNS
       "*/1 * * * * cloudflare-dns curl --request PUT --url https://api.cloudflare.com/client/v4/zones/${secrets.cloudflare_zone_id}/dns_records/${secrets.cloudflare_dns_record_id} --header 'Content-Type: application/json' --header 'Authorization: Bearer ${secrets.cloudflare_api_token}' --data '{ \"comment\": \"Domain verification record\", \"name\": \"@\", \"proxied\": false, \"settings\": {}, \"tags\": [], \"ttl\": 60, \"content\": \"'$(curl https://ipinfo.io/ip)'\", \"type\": \"A\" }' | jq -r '.success' | systemd-cat -t 'cloudflare-dns'"
     ];
