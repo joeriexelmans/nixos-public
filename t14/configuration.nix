@@ -100,7 +100,7 @@
     alsa.support32Bit = true;
     pulse.enable = true;
     jack.enable = true;
-    extraConfig = import ./pipewire-extra-config.nix;
+    # extraConfig = import ./pipewire-extra-config.nix;
   };
 
   # Graphics...
