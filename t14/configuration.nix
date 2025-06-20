@@ -48,7 +48,7 @@
   #time.timeZone = "America/Barbados";
 
   # Select internationalisation properties.
-  i18n.defaultLocale = "en_US.utf8";
+  i18n.defaultLocale = "en_US.UTF-8";
   i18n.extraLocaleSettings = {
     LC_ADDRESS = "nl_BE.utf8";
     LC_IDENTIFICATION = "nl_BE.utf8";
@@ -86,12 +86,13 @@
     # sensitivity = 90;  # default: 128
     speed = 110;        # default: 97
   };
+  hardware.logitech.wireless.enable = true;
 
   # Huion tablet:
   hardware.opentabletdriver.enable = true;
 
   # Sound...
-  hardware.pulseaudio.enable = false;
+  services.pulseaudio.enable = false;
   security.rtkit.enable = true;
   services.pipewire = {
     enable = true;
