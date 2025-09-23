@@ -36,7 +36,7 @@ in [
   fuse3  # User space filesystems - need this to run AppImages with steam-run
   gnupg
   bottles # Wrapper around wine
-  filelight # Disk space analysis
+  kdePackages.filelight # Disk space analysis
   dconf-editor
   gnome-calculator
   gnome-disk-utility
@@ -47,7 +47,7 @@ in [
 
   # Programming
   git
-  kate
+  kdePackages.kate
   vim
   vimPlugins.vim-nix
   graphviz
@@ -104,6 +104,7 @@ in [
   cheese
   playerctl # command line media control (play/pause)
   finamp
+  easyeffects
 
   # Belgian eID software and hardware drivers
   eid-mw
@@ -114,4 +115,6 @@ in [
   libacr38u
   scmccid
   qdigidoc
+
+  solaar # extra options for logitech mouse
 ]

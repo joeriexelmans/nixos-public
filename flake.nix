@@ -2,7 +2,7 @@
   description = "system config";
 
   inputs = {
-    nixpkgs-stable.url = "github:nixos/nixpkgs?ref=nixos-24.11";
+    nixpkgs-stable.url = "github:nixos/nixpkgs?ref=nixos-25.05";
     nixpkgs-unstable.url = "github:nixos/nixpkgs?ref=nixos-unstable";
     icomidal = {
       url = "git+https://deemz.org/git/joeri/icomidal";

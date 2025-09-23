@@ -48,7 +48,7 @@
   #time.timeZone = "America/Barbados";
 
   # Select internationalisation properties.
-  i18n.defaultLocale = "en_US.utf8";
+  i18n.defaultLocale = "en_US.UTF-8";
   i18n.extraLocaleSettings = {
     LC_ADDRESS = "nl_BE.utf8";
     LC_IDENTIFICATION = "nl_BE.utf8";
@@ -86,12 +86,13 @@
     # sensitivity = 90;  # default: 128
     speed = 110;        # default: 97
   };
+  hardware.logitech.wireless.enable = true;
 
   # Huion tablet:
   hardware.opentabletdriver.enable = true;
 
   # Sound...
-  hardware.pulseaudio.enable = false;
+  services.pulseaudio.enable = false;
   security.rtkit.enable = true;
   services.pipewire = {
     enable = true;
@@ -99,7 +100,7 @@
     alsa.support32Bit = true;
     pulse.enable = true;
     jack.enable = true;
-    extraConfig = import ./pipewire-extra-config.nix;
+    # extraConfig = import ./pipewire-extra-config.nix;
   };
 
   # Graphics...
@@ -199,6 +200,10 @@
     MOZ_USE_XINPUT2 = "1";
     GTK_OVERLAY_SCROLLING = 0;
   };
+
+  services.udev.extraRules = ''
+    ACTION=="add", SUBSYSTEM=="usb", DRIVERS=="usb", ATTR{power/wakeup}="disabled"
+  '';
 
   # This value determines the NixOS release from which the default
   # settings for stateful data, like file locations and database versions
