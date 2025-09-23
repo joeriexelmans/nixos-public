@@ -2,7 +2,7 @@
 # your system.  Help is available in the configuration.nix(5) man page
 # and in the NixOS manual (accessible by running ‘nixos-help’).
 
-{ config, pkgs, ... }:
+{ config, pkgs, icomidal, ... }:
 let secrets = import ../secrets.nix; in
 {
   imports =
@@ -20,6 +20,7 @@ let secrets = import ../secrets.nix; in
   ];
 
   nixpkgs.config.allowUnfree = true;
+  nix.settings.experimental-features = [ "nix-command" "flakes" ];
 
   # Use the systemd-boot EFI boot loader.
   #boot.loader.grub.device = "/dev/sda";
@@ -62,7 +63,7 @@ let secrets = import ../secrets.nix; in
   services.xserver.xkb.options = "eurosign:e";
 
   security.rtkit.enable = true;
-  services.pulseaudio.enable = false;
+  #services.pulseaudio.enable = false;
   services.pipewire = {
     enable = true;
     alsa.enable = true;
@@ -187,8 +188,12 @@ let secrets = import ../secrets.nix; in
     systemCronJobs = [
       # Update DuckDNS - use 'journalctl -e' to see logged output (should log 'OK' every 5 minutes)
       "*/5 * * * * duckdns curl 'https://www.duckdns.org/update?domains=mstro&token=${secrets.duckdns_token}&ip=' | systemd-cat -t 'duckdns'"
+
       # Update CloudFlare DNS
       "*/1 * * * * cloudflare-dns curl --request PUT --url https://api.cloudflare.com/client/v4/zones/${secrets.cloudflare_zone_id}/dns_records/${secrets.cloudflare_dns_record_id} --header 'Content-Type: application/json' --header 'Authorization: Bearer ${secrets.cloudflare_api_token}' --data '{ \"comment\": \"Domain verification record\", \"name\": \"@\", \"proxied\": false, \"settings\": {}, \"tags\": [], \"ttl\": 60, \"content\": \"'$(curl https://ipinfo.io/ip)'\", \"type\": \"A\" }' | jq -r '.success' | systemd-cat -t 'cloudflare-dns'"
+
+      # Update iComidal - every morning at 5:30
+      "30 5 * * * duckdns ${icomidal}/bin/icomidal >> /schijf/public/komida.ics"
     ];
   };
 
@@ -226,7 +231,7 @@ let secrets = import ../secrets.nix; in
         basicAuth = userlist;
         extraConfig = ''
           autoindex on;
-          add_header Cache-Control max-age=172800
+          add_header Cache-Control max-age=172800;
         '';
         proxyWebsockets = true;
       };
@@ -274,7 +279,7 @@ let secrets = import ../secrets.nix; in
       extraConfig = ''
         charset UTF-8;
         disable_symlinks off;
-        more_set_headers 'Server: nginx on NixOS';
+        more_set_headers 'Server: NIXOS';
       '';
     };
   in {
