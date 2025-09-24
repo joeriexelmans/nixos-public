@@ -59,6 +59,30 @@ let secrets = import ../secrets.nix; in
   systemd.services."getty@tty1".enable = false;
   systemd.services."autovt@tty1".enable = false;
 
+  # Run icomidal script daily
+  systemd.timers.icomidal = {
+    wantedBy = [ "timers.target" ];
+    timerConfig = {
+      OnCalendar = "daily";
+      Persistent = true;
+      Unit = "icomidal.service";
+    };
+  };
+  systemd.services.icomidal = {
+    script = ''
+      ${icomidal}/bin/icomidal > /var/lib/icomidal/komida.ics
+    '';
+    serviceConfig = {
+      Type = "oneshot";
+      User = "icomidal";
+    };
+  };
+  users.users.icomidal = {
+    isSystemUser = true;
+    group = "icomidal";
+  };
+  users.groups.icomidal = {};
+
   services.xserver.xkb.layout = "us";
   services.xserver.xkb.options = "eurosign:e";
 
@@ -191,9 +215,6 @@ let secrets = import ../secrets.nix; in
 
       # Update CloudFlare DNS
       "*/1 * * * * cloudflare-dns curl --request PUT --url https://api.cloudflare.com/client/v4/zones/${secrets.cloudflare_zone_id}/dns_records/${secrets.cloudflare_dns_record_id} --header 'Content-Type: application/json' --header 'Authorization: Bearer ${secrets.cloudflare_api_token}' --data '{ \"comment\": \"Domain verification record\", \"name\": \"@\", \"proxied\": false, \"settings\": {}, \"tags\": [], \"ttl\": 60, \"content\": \"'$(curl https://ipinfo.io/ip)'\", \"type\": \"A\" }' | jq -r '.success' | systemd-cat -t 'cloudflare-dns'"
-
-      # Update iComidal - every morning at 5:30
-      "30 5 * * * duckdns ${icomidal}/bin/icomidal >> /schijf/public/komida.ics"
     ];
   };
 

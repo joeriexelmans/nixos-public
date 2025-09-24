@@ -22,7 +22,7 @@
           ];
         };
         deemz = nixpkgs-stable.lib.nixosSystem {
-          specialArgs = { inherit system; icomidal=icomidal; };
+          specialArgs = { inherit system; icomidal=icomidal.packages.${system}.default; };
           modules = [
             ./deemz.org/configuration.nix
           ];
