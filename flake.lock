@@ -7,11 +7,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1758705293,
-        "narHash": "sha256-+JNimzIqv+J5k+glVTKTt4BbsmjA/d0kwsDxnWScDcg=",
+        "lastModified": 1758713456,
+        "narHash": "sha256-hmQrwJRXI1Yvt12EetBUAyPgicjMsY9nvmQzFRQ5iS4=",
         "ref": "refs/heads/master",
-        "rev": "4a9b55b2db83869a27b3dca4f04e0e805feb31ca",
-        "revCount": 11,
+        "rev": "9aaf8b8a425d596ee36edc29fd826332aba1b280",
+        "revCount": 13,
         "type": "git",
         "url": "https://deemz.org/git/joeri/icomidal"
       },
@@ -22,11 +22,11 @@
     },
     "nixpkgs-stable": {
       "locked": {
-        "lastModified": 1758346548,
-        "narHash": "sha256-afXE7AJ7MY6wY1pg/Y6UPHNYPy5GtUKeBkrZZ/gC71E=",
+        "lastModified": 1758589230,
+        "narHash": "sha256-zMTCFGe8aVGTEr2RqUi/QzC1nOIQ0N1HRsbqB4f646k=",
         "owner": "nixos",
         "repo": "nixpkgs",
-        "rev": "b2a3852bd078e68dd2b3dfa8c00c67af1f0a7d20",
+        "rev": "d1d883129b193f0b495d75c148c2c3a7d95789a0",
         "type": "github"
       },
       "original": {
