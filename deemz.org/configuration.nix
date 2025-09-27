@@ -131,7 +131,7 @@ let secrets = import ../secrets.nix; in
 
   users.users.maestro = {
     isNormalUser = true;
-    extraGroups = [ "wheel" ]; # Enable ‘sudo’ for the user.
+    extraGroups = [ "wheel" "docker" ]; # Enable ‘sudo’ for the user.
   };
 
   programs.gnupg.agent = {
@@ -359,6 +359,10 @@ let secrets = import ../secrets.nix; in
 
   # UPnP media playback (local network only)
   services.gnome.rygel.enable = true;
+
+  virtualisation.docker = {
+    enable = true;
+  };
 
 
   # This value determines the NixOS release from which the default
