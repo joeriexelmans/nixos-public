@@ -280,9 +280,16 @@ let secrets = import ../secrets.nix; in
         proxyPass = "http://127.0.0.1:9091/transmission/rpc";
         proxyWebsockets = true;
       };
-      locations."/jellyfin/" = {
-        #basicAuth = userlist;
-        proxyPass = "http://127.0.0.1:8096/jellyfin/";
+      #locations."/jellyfin/" = {
+        ##basicAuth = userlist;
+        #proxyPass = "http://127.0.0.1:8096/jellyfin/";
+        #proxyWebsockets = true;
+        #extraConfig = ''
+          #proxy_buffering off;
+        #'';
+      #};
+      locations."/navidrome" = {
+        proxyPass = "http://127.0.0.1:4533/navidrome";
         proxyWebsockets = true;
         extraConfig = ''
           proxy_buffering off;
@@ -332,7 +339,15 @@ let secrets = import ../secrets.nix; in
     plantumlLimitSize = 40000;
   };
 
-  services.jellyfin.enable = true;
+  #services.jellyfin.enable = true;
+
+  services.navidrome = {
+    enable = true;
+    settings = {
+      MusicFolder = "/schijf/music/downloads";
+      BaseUrl = "/navidrome";
+    };
+  };
 
   services.forgejo = {
     enable = true;
