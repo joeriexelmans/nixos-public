@@ -295,6 +295,21 @@ let secrets = import ../secrets.nix; in
           proxy_buffering off;
         '';
       };
+      locations."/refinery/" = {
+        proxyPass = "http://127.0.0.1:8888/";
+        proxyWebsockets = true;
+        extraConfig = ''
+          #rewrite /refinery/(.*) /$1 break;
+        '';
+      };
+      locations."/xtext-service" = {
+        proxyPass = "http://127.0.0.1:8888/xtext-service";
+        proxyWebsockets = true;
+      };
+      locations."/api/v1/" = {
+        proxyPass = "http://127.0.0.1:8888/api/v1/";
+        proxyWebsockets = true;
+      };
       locations."/git/" = {
         basicAuth = {};
         proxyPass = "http://127.0.0.1:27365/";
@@ -377,6 +392,18 @@ let secrets = import ../secrets.nix; in
 
   virtualisation.docker = {
     enable = true;
+  };
+  virtualisation.oci-containers.containers = {
+    refinery = {
+      image = "ghcr.io/graphs4value/refinery:latest";
+      ports = [ "127.0.0.1:8888:8888" ];
+      environment = {
+        REFINERY_PUBLIC_HOST = "deemz.org";
+        #REFINERY_PUBLIC_PORT = "";
+        REFINERY_MODEL_GENERATION_TIMEOUT_SEC = "60";
+        REFINERY_MODEL_GENERATION_THREAD_COUNT = "10";
+      };
+    };
   };
 
 
