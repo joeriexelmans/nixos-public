@@ -22,9 +22,26 @@
           ];
         };
         deemz = nixpkgs-stable.lib.nixosSystem {
-          specialArgs = { inherit system; icomidal=icomidal.packages.${system}.default; };
+          specialArgs = {
+            inherit system;
+            icomidal=icomidal.packages.${system}.default;
+            host = "deemz.org";
+            baseUrl = "/refinery";
+          };
           modules = [
             ./deemz.org/configuration.nix
+            ./deemz.org/refinery.nix
+          ];
+        };
+        msdl = nixpkgs-stable.lib.nixosSystem {
+          specialArgs = {
+            inherit system;
+            host="msdl-testing.uantwerpen.be";
+            baseUrl="/refinery";
+          };
+          modules = [
+            ./msdl/configuration.nix
+            ./deemz.org/refinery.nix
           ];
         };
       };
