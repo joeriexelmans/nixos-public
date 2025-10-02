@@ -85,8 +85,8 @@
 
     virtualHosts."msdl-testing.uantwerpen.be" = {
       forceSSL = true;
-      sslCertificate = "/var/msdl-testing.pem";
-      sslCertificateKey = "/var/msdl-testing.key";
+      sslCertificate = "/var/ssl_keys/msdl-testing.pem";
+      sslCertificateKey = "/var/ssl_keys/msdl-testing.key";
     };
   };
 
