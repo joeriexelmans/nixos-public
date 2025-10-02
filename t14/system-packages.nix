@@ -103,7 +103,8 @@ in [
   audacity
   cheese
   playerctl # command line media control (play/pause)
-  finamp
+  #finamp # i no longer use jellyfin
+  supersonic
   easyeffects
 
   # Belgian eID software and hardware drivers
