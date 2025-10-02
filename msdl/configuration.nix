@@ -82,6 +82,12 @@
     recommendedOptimisation = true;
     recommendedProxySettings = true;
     recommendedTlsSettings = true;
+
+    virtualHosts."msdl-testing.uantwerpen.be" = {
+      forceSSL = true;
+      sslCertificate = "/var/msdl-testing.pem";
+      sslCertificateKey = "/var/msdl-testing.key";
+    };
   };
 
 

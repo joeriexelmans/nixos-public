@@ -27,7 +27,6 @@
         '';
       };
 
-      forceSSL = true;
       serverName = refineryHost;
     };
   };
