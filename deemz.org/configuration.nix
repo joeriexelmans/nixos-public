@@ -256,12 +256,14 @@ let secrets = import ../secrets.nix; in
         '';
         proxyWebsockets = true;
       };
+
       locations."/public" = {
         basicAuth = {};
         extraConfig = ''
           autoindex off;
         '';
       };
+
       locations."/plantuml" = {
         basicAuth = {};
         extraConfig = ''
@@ -270,6 +272,7 @@ let secrets = import ../secrets.nix; in
         proxyPass = "http://127.0.0.1:8080/plantuml";
         proxyWebsockets = true;
       };
+
       locations."/transmission/web/" = {
         basicAuth = userlist;
         proxyPass = "http://127.0.0.1:9091/transmission/web/";
@@ -280,6 +283,7 @@ let secrets = import ../secrets.nix; in
         proxyPass = "http://127.0.0.1:9091/transmission/rpc";
         proxyWebsockets = true;
       };
+
       #locations."/jellyfin/" = {
         ##basicAuth = userlist;
         #proxyPass = "http://127.0.0.1:8096/jellyfin/";
@@ -295,15 +299,28 @@ let secrets = import ../secrets.nix; in
           proxy_buffering off;
         '';
       };
+
+      locations."/refinery/" = {
+        proxyPass = "http://127.0.0.1:8888/";
+        proxyWebsockets = true;
+      };
+      locations."/refinery/api/" = {
+        proxyPass = "http://127.0.0.1:8888/api/";
+        extraConfig = ''
+          chunked_transfer_encoding off;
+          proxy_buffering off;
+          proxy_cache off;
+        '';
+      };
+
       locations."/git/" = {
         basicAuth = {};
         proxyPass = "http://127.0.0.1:27365/";
         proxyWebsockets = true;
       };
+
       forceSSL = true;
       enableACME = true;
-
-
       extraConfig = ''
         charset UTF-8;
         disable_symlinks off;
@@ -377,6 +394,20 @@ let secrets = import ../secrets.nix; in
 
   virtualisation.docker = {
     enable = true;
+  };
+  virtualisation.oci-containers.containers = {
+    refinery = {
+      image = "ghcr.io/graphs4value/refinery:0.2.1-snapshot";
+      ports = [ "127.0.0.1:8888:8888" ];
+      environment = {
+        REFINERY_PUBLIC_HOST = "deemz.org";
+        REFINERY_WEBSOCKET_URL = "wss://deemz.org/refinery/xtext-service";
+        REFINERY_API_BASE = "https://deemz.org/refinery/api/v1/";
+        # Timeouts
+        REFINERY_MODEL_GENERATION_TIMEOUT_SEC = "60";
+        REFINERY_MODEL_GENERATION_THREAD_COUNT = "10";
+      };
+    };
   };
 
 
