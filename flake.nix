@@ -30,7 +30,7 @@
           };
           modules = [
             ./deemz.org/configuration.nix
-            ./deemz.org/refinery.nix
+            ./common/refinery.nix
           ];
         };
         msdl = nixpkgs-stable.lib.nixosSystem {
@@ -41,7 +41,7 @@
           };
           modules = [
             ./msdl/configuration.nix
-            ./deemz.org/refinery.nix
+            ./common/refinery.nix
           ];
         };
       };

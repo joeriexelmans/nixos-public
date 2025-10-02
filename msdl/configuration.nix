@@ -83,10 +83,6 @@
     recommendedProxySettings = true;
     recommendedTlsSettings = true;
     forceSSL = true;
-    extraConfig = ''
-      charset UTF-8;
-      more_set_headers 'Server: NIXOS';
-    '';
   };
 
   # Copy the NixOS configuration file and link it from the resulting system
