@@ -82,7 +82,6 @@
     recommendedOptimisation = true;
     recommendedProxySettings = true;
     recommendedTlsSettings = true;
-    forceSSL = true;
   };
 
   # Copy the NixOS configuration file and link it from the resulting system
