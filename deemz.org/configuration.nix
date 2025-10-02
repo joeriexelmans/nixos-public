@@ -248,6 +248,7 @@ let secrets = import ../secrets.nix; in
     userlist = secrets.nginx_userlist;
     commonConfig = {
       root = "/schijf";
+
       locations."/" = {
         basicAuth = userlist;
         extraConfig = ''
@@ -284,14 +285,6 @@ let secrets = import ../secrets.nix; in
         proxyWebsockets = true;
       };
 
-      #locations."/jellyfin/" = {
-        ##basicAuth = userlist;
-        #proxyPass = "http://127.0.0.1:8096/jellyfin/";
-        #proxyWebsockets = true;
-        #extraConfig = ''
-          #proxy_buffering off;
-        #'';
-      #};
       locations."/navidrome" = {
         proxyPass = "http://127.0.0.1:4533/navidrome";
         proxyWebsockets = true;
@@ -299,19 +292,6 @@ let secrets = import ../secrets.nix; in
           proxy_buffering off;
         '';
       };
-
-      # locations."/refinery/" = {
-      #   proxyPass = "http://127.0.0.1:8888/";
-      #   proxyWebsockets = true;
-      # };
-      # locations."/refinery/api/" = {
-      #   proxyPass = "http://127.0.0.1:8888/api/";
-      #   extraConfig = ''
-      #     chunked_transfer_encoding off;
-      #     proxy_buffering off;
-      #     proxy_cache off;
-      #   '';
-      # };
 
       locations."/git/" = {
         basicAuth = {};
@@ -356,8 +336,6 @@ let secrets = import ../secrets.nix; in
     plantumlLimitSize = 40000;
   };
 
-  #services.jellyfin.enable = true;
-
   services.navidrome = {
     enable = true;
     settings = {
@@ -388,14 +366,8 @@ let secrets = import ../secrets.nix; in
     downloadDirPermissions = "775"; # transmission: read+write+exec, other: read+exec
   };
 
-
   # UPnP media playback (local network only)
   services.gnome.rygel.enable = true;
-
-  # virtualisation.docker = {
-  #   enable = true;
-  # };
-
 
   # This value determines the NixOS release from which the default
   # settings for stateful data, like file locations and database versions
