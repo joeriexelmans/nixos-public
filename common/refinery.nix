@@ -43,7 +43,7 @@
 
         # Timeouts
         REFINERY_MODEL_GENERATION_TIMEOUT_SEC = "60";
-        REFINERY_MODEL_GENERATION_THREAD_COUNT = "10";
+        REFINERY_MODEL_GENERATION_THREAD_COUNT = "50";
       };
     };
   };
