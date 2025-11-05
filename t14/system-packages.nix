@@ -44,6 +44,7 @@ in [
   xfce.xfce4-weather-plugin
   alacritty
   xorg.xkill
+  gpu-screen-recorder-gtk # great screen recorder
 
   # Programming
   git
@@ -118,4 +119,7 @@ in [
   qdigidoc
 
   solaar # extra options for logitech mouse
+
+  # GNOME stuff
+  gnomeExtensions.appindicator
 ]

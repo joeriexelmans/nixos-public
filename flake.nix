@@ -8,9 +8,13 @@
       url = "git+https://deemz.org/git/joeri/icomidal";
       inputs.nixpkgs.follows = "nixpkgs-stable";
     };
+    mtl-aas = {
+      url = "git+https://deemz.org/git/teaching/mtl-aas";
+      inputs.nixpkgs.follows = "nixpkgs-stable";
+    };
   };
 
-  outputs = { self, nixpkgs-stable, nixpkgs-unstable, icomidal }:
+  outputs = { self, nixpkgs-stable, nixpkgs-unstable, icomidal, mtl-aas }:
     let 
       system = "x86_64-linux";
     in {
@@ -27,10 +31,12 @@
             icomidal=icomidal.packages.${system}.default;
             refineryHost = "deemz.org";
             refineryBaseUrl = "/refinery";
+            mtl-aas=mtl-aas.packages.${system}.default;
           };
           modules = [
             ./deemz.org/configuration.nix
             ./common/refinery.nix
+            ./common/mtl-aas.nix
           ];
         };
         msdl = nixpkgs-stable.lib.nixosSystem {

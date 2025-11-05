@@ -183,8 +183,13 @@
   virtualisation.docker.enable = true;
 
   # KDE config
-  services.desktopManager.plasma6.enable = true;
+  #services.desktopManager.plasma6.enable = true;
   #services.xserver.desktopManager.xfce.enable = true;
+
+
+  # GNOME
+  services.xserver.displayManager.gdm.enable = true;
+  services.xserver.desktopManager.gnome.enable = true; 
 
   # firmware updates
   services.fwupd.enable = true;
@@ -204,6 +209,7 @@
   services.udev.extraRules = ''
     ACTION=="add", SUBSYSTEM=="usb", DRIVERS=="usb", ATTR{power/wakeup}="disabled"
   '';
+  services.udev.packages = with pkgs; [ gnome-settings-daemon ];
 
   # This value determines the NixOS release from which the default
   # settings for stateful data, like file locations and database versions

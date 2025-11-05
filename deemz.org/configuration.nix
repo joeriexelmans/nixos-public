@@ -299,6 +299,10 @@ let secrets = import ../secrets.nix; in
         proxyWebsockets = true;
       };
 
+      locations."/apis/mtl-aas/" = {
+        proxyPass = "http://127.0.0.1:15478/";
+      };
+
       forceSSL = true;
       enableACME = true;
       extraConfig = ''
