@@ -83,6 +83,25 @@ let secrets = import ../secrets.nix; in
   };
   users.groups.icomidal = {};
 
+  # Run goaccess script hourly
+  systemd.timers.goaccess = {
+    wantedBy = [ "timers.target" ];
+    timerConfig = {
+      OnCalendar = "hourly";
+      Persistent = true;
+      Unit = "goaccess.service";
+    };
+  };
+  systemd.services.goaccess = {
+    script = "${pkgs.gzip}/bin/zcat /var/log/nginx/access.log.*.gz | ${pkgs.goaccess}/bin/goaccess -a -o /var/log/nginx/goaccess.html --log-format=COMBINED --geoip-database=${./GeoLite2-City.mmdb} --geoip-database=${./GeoLite2-Country.mmdb} --geoip-database=${./GeoLite2-ASN.mmdb}  /var/log/nginx/access.log /var/log/nginx/access.log.1 -";
+    serviceConfig = {
+      Type = "oneshot";
+      User = "nginx";
+      Nice = 19; # low priority
+      IOSchedulingClass = "idle";
+    };
+  };
+
   services.xserver.xkb.layout = "us";
   services.xserver.xkb.options = "eurosign:e";
 
