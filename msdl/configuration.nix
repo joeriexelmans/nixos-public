@@ -62,6 +62,7 @@
   environment.systemPackages = with pkgs; [
     vim
     firefox
+    git
   ];
 
   # Some programs need SUID wrappers, can be configured further or are
@@ -88,6 +89,9 @@
       forceSSL = true;
       sslCertificate = "/var/ssl_keys/msdl-testing.pem";
       sslCertificateKey = "/var/ssl_keys/msdl-testing.key";
+      extraConfig = ''
+        ssl_password_file "/var/ssl_keys/msdl-testing.passwd";
+      '';
     };
   };
 
