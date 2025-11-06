@@ -24,7 +24,7 @@
   # run MTL-aas as a systemd service
   systemd.services.mtl-aas = {
     script = ''
-      ${mtl-aas}/bin/run_server
+      ${mtl-aas}/bin/run_gunicorn
     '';
     serviceConfig = {
       Type = "exec";
