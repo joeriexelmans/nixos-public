@@ -1,6 +1,6 @@
 # Example configuration:
-#  host: deemz.org
-#  refineryBaseUrl: /refinery
+#  mtlAasHost: deemz.org
+#  mtlAasBaseUrl: /apis/mtl-aas/
 
 { config, pkgs, mtlAasHost, mtlAasBaseUrl, ... }:
 {
@@ -21,7 +21,7 @@
     };
   };
 
-  # run refinery container as a systemd service
+  # run MTL-aas as a systemd service
   systemd.services.mtl-aas = {
     script = ''
       ${mtl-aas}/bin/run_server
