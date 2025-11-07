@@ -32,6 +32,8 @@
             refineryHost = "deemz.org";
             refineryBaseUrl = "/refinery";
             mtl-aas=mtl-aas.packages.${system}.default;
+            mtlAasHost = "deemz.org";
+            mtlAasBaseUrl = "/apis/mtl-aas/";
           };
           modules = [
             ./deemz.org/configuration.nix

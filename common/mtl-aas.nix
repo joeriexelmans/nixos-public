@@ -2,7 +2,7 @@
 #  mtlAasHost: deemz.org
 #  mtlAasBaseUrl: /apis/mtl-aas/
 
-{ config, pkgs, mtlAasHost, mtlAasBaseUrl, ... }:
+{ config, pkgs, mtl-aas, mtlAasHost, mtlAasBaseUrl, ... }:
 {
   # reverse proxy
   services.nginx = {
