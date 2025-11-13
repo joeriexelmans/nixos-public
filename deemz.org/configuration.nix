@@ -19,6 +19,7 @@ let secrets = import ../secrets.nix; in
     owner = "nginx";
     group = "nginx";
     sopsFile = ./secrets/nginx-users;
+    format = "binary";
   };
   sops.secrets."duckdns_token" = {
     owner = "duckdns";
