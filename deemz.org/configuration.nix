@@ -2,13 +2,36 @@
 # your system.  Help is available in the configuration.nix(5) man page
 # and in the NixOS manual (accessible by running ‘nixos-help’).
 
-{ config, pkgs, icomidal, ... }:
+{ config, pkgs, sops-nix, icomidal, ... }:
 let secrets = import ../secrets.nix; in
 {
   imports =
     [ # Include the results of the hardware scan.
       ./hardware-configuration.nix
+      sops-nix.nixosModules.sops
     ];
+
+  sops.defaultSopsFile = ./secrets/secrets.yaml;
+  sops.defaultSopsFormat = "yaml";
+  sops.age.keyFile = "/home/maestro/.config/sops/age/keys.txt";
+
+  sops.secrets."nginx-users" = {
+    owner = "nginx";
+    group = "nginx";
+    sopsFile = ./secrets/nginx-users;
+  };
+  sops.secrets."duckdns_token" = {
+    owner = "duckdns";
+  };
+  sops.secrets."cloudflare_zone_id" = {
+    owner = "cloudflare-dns";
+  };
+  sops.secrets."cloudflare_dns_record_id" = {
+    owner = "cloudflare-dns";
+  };
+  sops.secrets."cloudflare_api_token" = {
+    owner = "cloudflare-dns";
+  };
 
   hardware.firmware = [
     (
@@ -230,10 +253,10 @@ let secrets = import ../secrets.nix; in
     enable = true;
     systemCronJobs = [
       # Update DuckDNS - use 'journalctl -e' to see logged output (should log 'OK' every 5 minutes)
-      "*/5 * * * * duckdns curl 'https://www.duckdns.org/update?domains=mstro&token=${secrets.duckdns_token}&ip=' | systemd-cat -t 'duckdns'"
+      "*/5 * * * * duckdns curl 'https://www.duckdns.org/update?domains=mstro&token=$(cat ${config.sops.secrets.duckdns_token.path})&ip=' | systemd-cat -t 'duckdns'"
 
       # Update CloudFlare DNS
-      "*/1 * * * * cloudflare-dns curl --request PUT --url https://api.cloudflare.com/client/v4/zones/${secrets.cloudflare_zone_id}/dns_records/${secrets.cloudflare_dns_record_id} --header 'Content-Type: application/json' --header 'Authorization: Bearer ${secrets.cloudflare_api_token}' --data '{ \"comment\": \"Domain verification record\", \"name\": \"@\", \"proxied\": false, \"settings\": {}, \"tags\": [], \"ttl\": 60, \"content\": \"'$(curl https://ipinfo.io/ip)'\", \"type\": \"A\" }' | jq -r '.success' | systemd-cat -t 'cloudflare-dns'"
+      "*/1 * * * * cloudflare-dns curl --request PUT --url https://api.cloudflare.com/client/v4/zones/$(cat ${config.sops.secrets.cloudflare_zone_id.path})/dns_records/$(cat ${config.sops.secrets.cloudflare_dns_record_id.path}) --header 'Content-Type: application/json' --header 'Authorization: Bearer $(cat ${config.sops.secrets.cloudflare_api_token.path})' --data '{ \"comment\": \"Domain verification record\", \"name\": \"@\", \"proxied\": false, \"settings\": {}, \"tags\": [], \"ttl\": 60, \"content\": \"'$(curl https://ipinfo.io/ip)'\", \"type\": \"A\" }' | jq -r '.success' | systemd-cat -t 'cloudflare-dns'"
     ];
   };
 
@@ -264,12 +287,12 @@ let secrets = import ../secrets.nix; in
 
   # NGINX
   services.nginx = let
-    userlist = secrets.nginx_userlist;
+    userlistFile = config.sops.secrets."nginx-users".path;
     commonConfig = {
       root = "/schijf";
 
       locations."/" = {
-        basicAuth = userlist;
+        basicAuthFile = userlistFile;
         extraConfig = ''
           autoindex on;
           add_header Cache-Control max-age=172800;
@@ -294,12 +317,14 @@ let secrets = import ../secrets.nix; in
       };
 
       locations."/transmission/web/" = {
-        basicAuth = userlist;
+        basicAuthFile = userlistFile;
+        #basicAuth = userlist;
         proxyPass = "http://127.0.0.1:9091/transmission/web/";
         proxyWebsockets = true;
       };
       locations."/transmission/rpc" = {
-        basicAuth = userlist;
+        #basicAuth = userlist;
+        basicAuthFile = userlistFile;
         proxyPass = "http://127.0.0.1:9091/transmission/rpc";
         proxyWebsockets = true;
       };

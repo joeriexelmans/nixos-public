@@ -4,6 +4,10 @@
   inputs = {
     nixpkgs-stable.url = "github:nixos/nixpkgs?ref=nixos-25.05";
     nixpkgs-unstable.url = "github:nixos/nixpkgs?ref=nixos-unstable";
+    sops-nix = {
+      url = "github:Mic92/sops-nix";
+      inputs.nixpkgs.follows = "nixpkgs-stable";
+    };
     icomidal = {
       url = "git+https://deemz.org/git/joeri/icomidal";
       inputs.nixpkgs.follows = "nixpkgs-stable";
@@ -14,7 +18,7 @@
     };
   };
 
-  outputs = { self, nixpkgs-stable, nixpkgs-unstable, icomidal, mtl-aas }:
+  outputs = { self, nixpkgs-stable, nixpkgs-unstable, sops-nix, icomidal, mtl-aas }:
     let 
       system = "x86_64-linux";
     in {
@@ -34,6 +38,7 @@
             mtl-aas=mtl-aas.packages.${system}.default;
             mtlAasHost = "deemz.org";
             mtlAasBaseUrl = "/apis/mtl-aas/";
+            sops-nix = sops-nix;
           };
           modules = [
             ./deemz.org/configuration.nix
