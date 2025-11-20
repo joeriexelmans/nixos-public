@@ -30,11 +30,11 @@
         "uv2nix": "uv2nix"
       },
       "locked": {
-        "lastModified": 1762459028,
-        "narHash": "sha256-dlc/P71ePUpxD1RQuRNvRvnFK6v8VI9342A0mxemfYQ=",
+        "lastModified": 1763044052,
+        "narHash": "sha256-zF/fQRug47YTNmeg2syFBdrxSC+KGpY619gVyQLqeoo=",
         "ref": "refs/heads/main",
-        "rev": "5ac29af132de56041d99126dc607cf43b3739250",
-        "revCount": 366,
+        "rev": "249d867b17168250cd8854be722ebb683b53a8cf",
+        "revCount": 368,
         "type": "git",
         "url": "https://deemz.org/git/teaching/mtl-aas"
       },
