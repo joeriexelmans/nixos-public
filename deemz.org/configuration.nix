@@ -204,10 +204,10 @@ let secrets = import ../secrets.nix; in
   };
   networking.enableIPv6 = true;
   networking.defaultGateway = "192.168.1.1";
-  networking.defaultGateway6 = {
-    address = "fe80::52d4:f7ff:fe28:9849"; # TP-Link router
-    interface = "enp1s0";
-  };
+  #networking.defaultGateway6 = {
+  #  address = "fe80::52d4:f7ff:fe28:9849"; # TP-Link router
+  #  interface = "enp1s0";
+  #};
   networking.nameservers = [ "1.1.1.1" ];
   networking.extraHosts = ''
     192.168.1.60             mstro.duckdns.org
