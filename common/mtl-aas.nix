@@ -30,6 +30,7 @@
       Type = "exec";
       User = "mtl-aas";
     };
+    enable = true;
   };
   users.users.mtl-aas = {
     isSystemUser = true;
