@@ -61,10 +61,11 @@ let secrets = import ../secrets.nix; in
   services.fwupd.enable = true;
 
   # Enable the X11 windowing system.
-  services.xserver.enable = true;
+  #services.xserver.enable = true;
   # Enable the GNOME Desktop Environment.
-  services.xserver.displayManager.gdm.enable = true;
-  services.xserver.desktopManager.gnome.enable = true;
+  #services.xserver.displayManager.gdm.enable = true;
+  #services.xserver.displayManager.gdm.wayland = false;
+  #services.xserver.desktopManager.gnome.enable = true;
   services.xserver.videoDrivers = [ "modesetting" ];
   services.xserver.deviceSection = ''
     Option "TearFree" "true"
@@ -301,6 +302,10 @@ let secrets = import ../secrets.nix; in
         proxyWebsockets = true;
       };
 
+      locations."/robots.txt" = {
+        basicAuth = {};
+      };
+
       locations."/public" = {
         basicAuth = {};
         extraConfig = ''
@@ -354,7 +359,7 @@ let secrets = import ../secrets.nix; in
         charset UTF-8;
         disable_symlinks off;
         more_set_headers 'Server: NIXOS';
-      '';
+      '' + (builtins.readFile ./nginx-block-ai-bots.conf);
     };
   in {
     enable = true;
@@ -416,7 +421,10 @@ let secrets = import ../secrets.nix; in
   };
 
   # UPnP media playback (local network only)
-  services.gnome.rygel.enable = true;
+  #services.gnome.rygel.enable = true;
+  services.gmediarender = {
+    enable = true;
+  };
 
   # This value determines the NixOS release from which the default
   # settings for stateful data, like file locations and database versions
