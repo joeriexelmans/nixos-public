@@ -7,11 +7,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1758713456,
-        "narHash": "sha256-hmQrwJRXI1Yvt12EetBUAyPgicjMsY9nvmQzFRQ5iS4=",
+        "lastModified": 1767954787,
+        "narHash": "sha256-GZRwEiV5YgvqDTcxkfQs1RhCjMTWuvz+PhVMAEQCigM=",
         "ref": "refs/heads/master",
-        "rev": "9aaf8b8a425d596ee36edc29fd826332aba1b280",
-        "revCount": 13,
+        "rev": "95b24b3e7e7826034151d0263f9bf85865992401",
+        "revCount": 14,
         "type": "git",
         "url": "https://deemz.org/git/joeri/icomidal"
       },
