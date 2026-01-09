@@ -359,6 +359,7 @@ let secrets = import ../secrets.nix; in
         charset UTF-8;
         disable_symlinks off;
         more_set_headers 'Server: NIXOS';
+        more_set_headers 'Access-Control-Allow-Origin: *';
       '' + (builtins.readFile ./nginx-block-ai-bots.conf);
     };
   in {
