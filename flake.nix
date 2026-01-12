@@ -2,7 +2,7 @@
   description = "system config";
 
   inputs = {
-    nixpkgs-stable.url = "github:nixos/nixpkgs?ref=nixos-25.05";
+    nixpkgs-stable.url = "github:nixos/nixpkgs?ref=nixos-25.11";
     nixpkgs-unstable.url = "github:nixos/nixpkgs?ref=nixos-unstable";
     sops-nix = {
       url = "github:Mic92/sops-nix";
