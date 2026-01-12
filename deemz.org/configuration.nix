@@ -3,7 +3,6 @@
 # and in the NixOS manual (accessible by running ‘nixos-help’).
 
 { config, pkgs, sops-nix, icomidal, ... }:
-let secrets = import ../secrets.nix; in
 {
   imports =
     [ # Include the results of the hardware scan.
@@ -32,6 +31,12 @@ let secrets = import ../secrets.nix; in
   };
   sops.secrets."cloudflare_api_token" = {
     owner = "cloudflare-dns";
+  };
+  # contains LastFM API key:
+  sops.secrets."navidrome_env" = {
+    owner = "navidrome";
+    sopsFile = ./secrets/navidrome_env;
+    format = "binary";
   };
 
   hardware.firmware = [
@@ -397,6 +402,7 @@ let secrets = import ../secrets.nix; in
       MusicFolder = "/schijf/music/downloads";
       BaseUrl = "/navidrome";
     };
+    environmentFile = config.sops.secrets.navidrome_env.path;
   };
 
   services.forgejo = {
