@@ -146,12 +146,12 @@
   };
 
   nixpkgs.config.packageOverrides = pkgs: {
-    vaapiIntel = pkgs.vaapiIntel.override { enableHybridCodec = true; };
+    vaapiIntel = pkgs.intel-vaapi-driver.override { enableHybridCodec = true; };
   };
   hardware.graphics.enable = true;
   hardware.graphics.extraPackages = with pkgs; [
     intel-media-driver
-    vaapiIntel
+    intel-vaapi-driver
     intel-compute-runtime # OpenCL filter support
   ];
 
