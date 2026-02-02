@@ -23,12 +23,6 @@
   sops.secrets."duckdns_token" = {
     owner = "duckdns";
   };
-  sops.secrets."cloudflare_zone_id" = {
-    owner = "cloudflare-dns";
-  };
-  sops.secrets."cloudflare_dns_record_id" = {
-    owner = "cloudflare-dns";
-  };
   sops.secrets."cloudflare_api_token" = {
     owner = "cloudflare-dns";
   };
@@ -218,6 +212,7 @@
   networking.extraHosts = ''
     192.168.1.60             mstro.duckdns.org
     192.168.1.60             deemz.org
+    192.168.1.60             joeri-exelmans.page
   '';
     # 2a02:578:8591:1b00::ffff mstro.duckdns.org
   networking.networkmanager.unmanaged = [ "enp1s0" ];
@@ -256,15 +251,56 @@
   };
   users.groups.dyndns = {}; # create this user
   # Send DNS updates
-  services.cron = {
+  services.cron = let
+    cloudflare = import ./cloudflare.nix;
+  in {
     enable = true;
     systemCronJobs = [
       # Update DuckDNS - use 'journalctl -e' to see logged output (should log 'OK' every 5 minutes)
       "*/5 * * * * duckdns curl 'https://www.duckdns.org/update?domains=mstro&token=$(cat ${config.sops.secrets.duckdns_token.path})&ip=' | systemd-cat -t 'duckdns'"
-
-      # Update CloudFlare DNS
-      "*/1 * * * * cloudflare-dns curl --request PUT --url https://api.cloudflare.com/client/v4/zones/$(cat ${config.sops.secrets.cloudflare_zone_id.path})/dns_records/$(cat ${config.sops.secrets.cloudflare_dns_record_id.path}) --header 'Content-Type: application/json' --header 'Authorization: Bearer $(cat ${config.sops.secrets.cloudflare_api_token.path})' --data '{ \"comment\": \"Domain verification record\", \"name\": \"@\", \"proxied\": false, \"settings\": {}, \"tags\": [], \"ttl\": 60, \"content\": \"'$(curl https://ipinfo.io/ip)'\", \"type\": \"A\" }' | jq -r '.success' | systemd-cat -t 'cloudflare-dns'"
     ];
+  };
+
+  systemd.timers.cloudflare-dns = {
+    wantedBy = [ "timers.target" ];
+    timerConfig = {
+      OnCalendar = "*-*-* *:*:00"; # every minute
+      Persistent = true;
+      Unit = "cloudflare-dns.service";
+    };
+  };
+  systemd.services.cloudflare-dns = let
+    cloudflare = import ./cloudflare.nix;
+    command = cfg: ''
+      ${pkgs.curl}/bin/curl \
+        --request PUT \
+        --url https://api.cloudflare.com/client/v4/zones/${cfg.zone_id}/dns_records/${cfg.dns_record_id} \
+        --header 'Content-Type: application/json' \
+        --header 'Authorization: Bearer ''\'''${TOKEN}''' \
+        --data '{
+           "comment": "Domain verification record",
+           "name": "@",
+           "proxied": false,
+           "settings": {},
+           "tags": [],
+           "ttl": 60,
+           "content": "''\'''${IP}'",
+           "type": "A"
+        }'
+    '';
+  in {
+    script = ''
+      echo "updating cloudflare DNS ..."
+      TOKEN="$(${pkgs.coreutils}/bin/cat ${config.sops.secrets.cloudflare_api_token.path})"
+      IP="$(${pkgs.curl}/bin/curl https://ipinfo.io/ip)"
+      echo "''${TOKEN} ''${IP}"
+      ${command cloudflare.homepage}
+      ${command cloudflare.deemz}
+    '';
+    serviceConfig = {
+      Type = "oneshot";
+      User = "cloudflare-dns";
+    };
   };
 
   services.openssh.enable = true;
@@ -308,6 +344,9 @@
       };
 
       locations."/robots.txt" = {
+        basicAuth = {};
+      };
+      locations."/sitemap.xml" = {
         basicAuth = {};
       };
 
@@ -382,12 +421,25 @@
     virtualHosts."deemz.org" = commonConfig // {
       serverName = "deemz.org";
     };
+    virtualHosts."joeri-exelmans.page" = {
+      serverName = "joeri-exelmans.page";
+      forceSSL = true;
+      enableACME = true;
+      extraConfig = ''
+        charset UTF-8;
+        more_set_headers 'Server: NixOS';
+      '';
+      locations."/" = {
+        root = "/schijf/public/homepage/";
+      };
+    };
   };
   security.acme = {
     acceptTerms = true;
     certs = {
       "mstro.duckdns.org".email = "joeri.exelmans@gmail.com";
       "deemz.org".email = "joeri.exelmans@gmail.com";
+      "joeri-exelmans.page".email = "joeri.exelmans@gmail.com";
     };
   };
 
@@ -414,7 +466,7 @@
 
   services.transmission = {
     enable = true;
-    package = pkgs.transmission_3;
+    package = pkgs.transmission_4;
     settings = {
       peer-port = 51413;
       rpc-enabled = true;
