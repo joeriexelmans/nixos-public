@@ -2,7 +2,7 @@
 # your system.  Help is available in the configuration.nix(5) man page
 # and in the NixOS manual (accessible by running ‘nixos-help’).
 
-{ config, pkgs, sops-nix, icomidal, ... }:
+{ config, system ? builtins.currentSystem, pkgs, sops-nix, icomidal, ... }:
 {
   imports =
     [ # Include the results of the hardware scan.
