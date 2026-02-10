@@ -468,6 +468,7 @@
     # use older version of transmission because 4.0.6 is banned from PTP
     transmission_4_0_5 = (import (builtins.fetchTarball {
       url = "https://github.com/NixOS/nixpkgs/archive/0c19708cf035f50d28eb4b2b8e7a79d4dc52f6bb.tar.gz";
+      sha256 = "";
     }) {}).transmission_4;
   in {
     enable = true;
