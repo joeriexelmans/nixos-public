@@ -466,13 +466,9 @@
 
   services.transmission = let
     # use older version of transmission because 4.0.6 is banned from PTP
-    oldPkgs = import (builtins.fetchGit {
-      name = "nixpkgs_transmission_4_0_5";
-      url = "https://github.com/NixOS/nixpkgs/";
-      ref = "refs/heads/nixpkgs-unstable";
-      rev = "0c19708cf035f50d28eb4b2b8e7a79d4dc52f6bb";
-    }) {};
-    transmission_4_0_5 = oldPkgs.transmission_4;
+    transmission_4_0_5 = (import (builtins.fetchTarball {
+      url = "https://github.com/NixOS/nixpkgs/archive/0c19708cf035f50d28eb4b2b8e7a79d4dc52f6bb.tar.gz";
+    }) {}).transmission_4;
   in {
     enable = true;
     package = transmission_4_0_5;
