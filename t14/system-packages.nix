@@ -1,6 +1,6 @@
 { pkgs }: with pkgs;
 let
-  firefoxWithBelgianEid = firefox-wayland.override { pkcs11Modules = [ eid-mw ]; };
+  firefoxWithBelgianEid = firefox.override { pkcs11Modules = [ eid-mw ]; };
 
   sublime4Cracked = sublime4.overrideAttrs (finalAttrs: previousAttrs: {
     sublime_text = previousAttrs.sublime_text.overrideAttrs (finalAttrs: previousAttrs:
@@ -52,7 +52,8 @@ in [
   vim
   vimPlugins.vim-nix
   graphviz
-  sublime4Cracked
+  #sublime4Cracked
+  sublime4
   sublime-merge
   vscode
 
@@ -61,12 +62,12 @@ in [
   firefoxWithBelgianEid
   thunderbird
   signal-desktop
-  whatsapp-for-linux
-  tor-browser-bundle-bin
+  wasistlos
+  tor-browser
   zoom-us
   joplin-desktop
   transmission-remote-gtk
-  transmission_3-gtk
+  transmission_4-gtk
   dig # DNS debugging
   sshfs
   teams-for-linux # Unofficial teams client
@@ -80,7 +81,7 @@ in [
 
   # Documents thingy
   libreoffice
-  evince
+  #evince # replaced by GNOME's new document reader
   koreader # epub reader
   hunspell
   hunspellDicts.en-us
@@ -110,7 +111,7 @@ in [
 
   # Belgian eID software and hardware drivers
   eid-mw
-  pcsctools
+  pcsc-tools
   pcsclite
   ccid
   acsccid

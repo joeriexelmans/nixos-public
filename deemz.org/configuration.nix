@@ -464,9 +464,18 @@
     settings.service.DISABLE_REGISTRATION = true;
   };
 
-  services.transmission = {
+  services.transmission = let
+    # use older version of transmission because 4.0.6 is banned from PTP
+    oldPkgs = import (builtins.fetchGit {
+      name = "nixpkgs_transmission_4_0_5";
+      url = "https://github.com/NixOS/nixpkgs/";
+      ref = "refs/heads/nixpkgs-unstable";
+      rev = "0c19708cf035f50d28eb4b2b8e7a79d4dc52f6bb";
+    }) {};
+    transmission_4_0_5 = oldPkgs.transmission_4;
+  in {
     enable = true;
-    package = pkgs.transmission_4;
+    package = transmission_4_0_5;
     settings = {
       peer-port = 51413;
       rpc-enabled = true;

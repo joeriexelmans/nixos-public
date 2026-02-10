@@ -67,6 +67,15 @@
   '';
   networking.networkmanager.enable = true;
   networking.networkmanager.wifi.backend = "iwd";
+  networking.wireless.iwd.enable = true;
+  networking.wireless.iwd.settings = {
+    Network = {
+      EnableIPv6 = true;
+    };
+    Settings = {
+      AutoConnect = true;
+    };
+  };
   networking.firewall.enable = false;
 
   # Enable the X11 windowing system.
@@ -108,7 +117,7 @@
   hardware.graphics.enable32Bit = true; # also install 32 bit drivers (in order to run 32 bit apps under Wine)
   hardware.graphics.extraPackages = with pkgs; [
       intel-media-driver # hardware accelerated video decoding on Intel
-      vaapiIntel
+      intel-vaapi-driver
   ];
 
   hardware.bluetooth.enable = true;
@@ -133,7 +142,7 @@
     liberation_ttf
     roboto
     roboto-mono
-    vistafonts
+    vista-fonts
     dejavu_fonts
     freefont_ttf
     gyre-fonts # TrueType substitutes for standard PostScript fonts
@@ -188,8 +197,8 @@
 
 
   # GNOME
-  services.xserver.displayManager.gdm.enable = true;
-  services.xserver.desktopManager.gnome.enable = true; 
+  services.displayManager.gdm.enable = true;
+  services.desktopManager.gnome.enable = true; 
 
   # firmware updates
   services.fwupd.enable = true;
