@@ -79,6 +79,11 @@ in [
   drawio
   eog
 
+  # CAD thingy
+  #freecad
+  fstl # STL viewer
+  openscad
+
   # Documents thingy
   libreoffice
   #evince # replaced by GNOME's new document reader

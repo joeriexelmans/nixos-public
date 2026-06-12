@@ -2,7 +2,7 @@
   description = "system config";
 
   inputs = {
-    nixpkgs-stable.url = "github:nixos/nixpkgs?ref=nixos-25.11";
+    nixpkgs-stable.url = "github:nixos/nixpkgs?ref=nixos-26.05";
     nixpkgs-unstable.url = "github:nixos/nixpkgs?ref=nixos-unstable";
     sops-nix = {
       url = "github:Mic92/sops-nix";
@@ -12,13 +12,9 @@
       url = "git+https://deemz.org/git/joeri/icomidal";
       inputs.nixpkgs.follows = "nixpkgs-stable";
     };
-    mtl-aas = {
-      url = "git+https://deemz.org/git/teaching/mtl-aas";
-      inputs.nixpkgs.follows = "nixpkgs-stable";
-    };
   };
 
-  outputs = { self, nixpkgs-stable, nixpkgs-unstable, sops-nix, icomidal, mtl-aas }:
+  outputs = { self, nixpkgs-stable, nixpkgs-unstable, sops-nix, icomidal }:
     let 
       system = "x86_64-linux";
     in {
@@ -33,17 +29,13 @@
           specialArgs = {
             inherit system;
             icomidal=icomidal.packages.${system}.default;
-            refineryHost = "deemz.org";
-            refineryBaseUrl = "/refinery";
-            mtl-aas=mtl-aas.packages.${system}.default;
-            mtlAasHost = "deemz.org";
-            mtlAasBaseUrl = "/apis/mtl-aas/";
+            #refineryHost = "deemz.org";
+            #refineryBaseUrl = "/refinery";
             sops-nix = sops-nix;
           };
           modules = [
             ./deemz.org/configuration.nix
-            ./common/refinery.nix
-            ./common/mtl-aas.nix
+            #./common/refinery.nix
           ];
         };
         msdl = nixpkgs-stable.lib.nixosSystem {

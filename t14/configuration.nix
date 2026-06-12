@@ -43,6 +43,7 @@
 
   # Set your time zone.
   time.timeZone = "Europe/Brussels";
+  #time.timeZone = "Europe/Lisbon";
   #time.timeZone = "Europe/London";
   #time.timeZone = "America/Montreal";
   #time.timeZone = "America/Barbados";
@@ -213,6 +214,9 @@
     MOZ_ENABLE_WAYLAND = "1";
     MOZ_USE_XINPUT2 = "1";
     GTK_OVERLAY_SCROLLING = 0;
+
+    # Fix FreeCAD crash
+    GSETTINGS_SCHEMA_DIR ="${pkgs.gtk3}/share/gsettings-schemas/${pkgs.gtk3.name}/glib-2.0/schemas"; 
   };
 
   services.udev.extraRules = ''
