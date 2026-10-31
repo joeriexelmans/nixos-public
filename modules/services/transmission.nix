@@ -12,7 +12,7 @@
       rpc-host-whitelist-enabled = false;
       download-dir = "/schijf/downloads";
     };
-    home = "/schijf/transmission";
+    home = "/home/transmission";
     downloadDirPermissions = "775"; # transmission: read+write+exec, other: read+exec
   };
 
