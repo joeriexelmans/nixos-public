@@ -22,9 +22,6 @@ in
     recommendedProxySettings = true;
     recommendedTlsSettings = true;
 
-    # virtualHosts."mstro.duckdns.org" = {
-    #   serverName = "mstro.duckdns.org";
-    # } // commonConfig;
     virtualHosts."deemz.org" = {
       serverName = "deemz.org";
     } // commonConfig;
@@ -37,7 +34,6 @@ in
   security.acme = {
     acceptTerms = true;
     certs = {
-      # "mstro.duckdns.org".email = "joeri.exelmans@gmail.com";
       "deemz.org".email = "joeri.exelmans@gmail.com";
       "joeri-exelmans.page".email = "joeri.exelmans@gmail.com";
     };

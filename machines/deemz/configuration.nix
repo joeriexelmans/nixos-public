@@ -8,6 +8,8 @@
     [ # Include the results of the hardware scan.
       ./hardware-configuration.nix
 
+      ./network.nix
+
       ../../modules/config/graphics.nix
       ../../modules/config/keyboard.nix
       ../../modules/config/locale.nix
