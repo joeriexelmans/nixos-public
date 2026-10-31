@@ -27,9 +27,8 @@
   #};
   networking.nameservers = [ "1.1.1.1" ];
   networking.extraHosts = ''
-    192.168.1.60             mstro.duckdns.org
-    192.168.1.60             deemz.org
-    192.168.1.60             joeri-exelmans.page
+    127.0.0.1  deemz.org  joeri-exelmans.page
+    ::1  deemz.org  joeri-exelmans.page
   '';
     # 2a02:578:8591:1b00::ffff mstro.duckdns.org
   networking.networkmanager.unmanaged = [ "enp1s0" ];
