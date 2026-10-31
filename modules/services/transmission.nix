@@ -10,6 +10,7 @@
       rpc-bind-address = "0.0.0.0";
       rpc-whitelist-enabled = false;
       rpc-host-whitelist-enabled = false;
+      download-dir = "/schijf/downloads";
     };
     home = "/schijf/transmission";
     downloadDirPermissions = "775"; # transmission: read+write+exec, other: read+exec

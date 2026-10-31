@@ -3,7 +3,7 @@
   services.navidrome = {
     enable = true;
     settings = {
-      MusicFolder = "/schijf/music/downloads";
+      MusicFolder = "/schijf/downloads/music";
       BaseUrl = "/navidrome";
     };
     # environmentFile = config.sops.secrets.navidrome_env.path;
