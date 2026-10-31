@@ -8,13 +8,13 @@
     useDHCP = false;
     ipv4.addresses = [
       {
-        address = ${ipv4Addr};
+        address = ipv4Addr;
         prefixLength = 24;
       }
     ];
     ipv6.addresses = [
       {
-        address = ${ipv6Addr};
+        address = ipv6Addr;
         prefixLength = 64;
       }
     ];
