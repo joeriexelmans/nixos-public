@@ -1,32 +1,12 @@
 {
   "nodes": {
-    "icomidal": {
-      "inputs": {
-        "nixpkgs": [
-          "nixpkgs-stable"
-        ]
-      },
-      "locked": {
-        "lastModified": 1768902531,
-        "narHash": "sha256-dVVXSGd9UN/RC7nTYtuWuhuh1euaK92ZublLxOAZAqw=",
-        "ref": "refs/heads/master",
-        "rev": "483f4ef406967448d2d38b0d762060131b6c474e",
-        "revCount": 15,
-        "type": "git",
-        "url": "https://deemz.org/git/joeri/icomidal"
-      },
-      "original": {
-        "type": "git",
-        "url": "https://deemz.org/git/joeri/icomidal"
-      }
-    },
     "nixpkgs-stable": {
       "locked": {
-        "lastModified": 1780902259,
-        "narHash": "sha256-q8yYEC5f1mFlQO9RGna4LTc9QrcvWunX6FYp83munkQ=",
+        "lastModified": 1793294725,
+        "narHash": "sha256-loLMnbbS4KhmG2ln9EY6f0YMNCA273Yx02oWYQ9IMeE=",
         "owner": "nixos",
         "repo": "nixpkgs",
-        "rev": "bd0ff2d3eac24699c3664d5966b9ef36f388e2ca",
+        "rev": "6f06d204d8f2d8761d9da78778745974a3216381",
         "type": "github"
       },
       "original": {
@@ -38,11 +18,11 @@
     },
     "nixpkgs-unstable": {
       "locked": {
-        "lastModified": 1781074563,
-        "narHash": "sha256-md8WlXOlfnIeHeOScMTTHFyf2d6iaTwPl2apR5EQ3P4=",
+        "lastModified": 1793341285,
+        "narHash": "sha256-Y1CiZ4SoBUjLQyQM/pY+rS2dXD3CHLPstF0lmOc73D4=",
         "owner": "nixos",
         "repo": "nixpkgs",
-        "rev": "9ae611a455b90cf061d8f332b977e387bda8e1ca",
+        "rev": "1c89083e451e891152365b799595cf7790a43325",
         "type": "github"
       },
       "original": {
@@ -54,30 +34,24 @@
     },
     "root": {
       "inputs": {
-        "icomidal": "icomidal",
         "nixpkgs-stable": "nixpkgs-stable",
         "nixpkgs-unstable": "nixpkgs-unstable",
-        "sops-nix": "sops-nix"
+        "secrets": "secrets"
       }
     },
-    "sops-nix": {
-      "inputs": {
-        "nixpkgs": [
-          "nixpkgs-stable"
-        ]
-      },
+    "secrets": {
       "locked": {
-        "lastModified": 1780547341,
-        "narHash": "sha256-Gq8KNx5A7hBB3uGJaj6eQfLDIz5YdLu92gqBcvHvoUo=",
-        "owner": "Mic92",
-        "repo": "sops-nix",
-        "rev": "9ed65852b6257fbeae4355bc24ecfea307ca759a",
-        "type": "github"
+        "lastModified": 1793396782,
+        "narHash": "sha256-0UWe/nxSvRZP+Jg8fmsbuEoIHuY8o9Qm7vn9Pc3eHPA=",
+        "ref": "refs/heads/master",
+        "rev": "4d2fa5a700778970a2f8ffcfd569d1d870d4eaf4",
+        "revCount": 2,
+        "type": "git",
+        "url": "ssh://forgejo@deemz.org/joeri/nixos-secrets.git"
       },
       "original": {
-        "owner": "Mic92",
-        "repo": "sops-nix",
-        "type": "github"
+        "type": "git",
+        "url": "ssh://forgejo@deemz.org/joeri/nixos-secrets.git"
       }
     }
   },

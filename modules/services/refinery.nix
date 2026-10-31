@@ -4,33 +4,6 @@
 
 { config, pkgs, refineryHost, refineryBaseUrl, ... }:
 {
-  # reverse proxy
-  services.nginx = {
-    enable = true;
-
-    virtualHosts.${refineryHost} = {
-      locations."${refineryBaseUrl}/" = {
-        proxyPass = "http://127.0.0.1:8888/";
-        proxyWebsockets = true;
-        extraConfig = ''
-          charset UTF-8;
-          more_set_headers 'Server: NIXOS';
-        '';
-      };
-
-      locations."${refineryBaseUrl}/api/" = {
-        proxyPass = "http://127.0.0.1:8888/api/";
-        extraConfig = ''
-          chunked_transfer_encoding off;
-          proxy_buffering off;
-          proxy_cache off;
-        '';
-      };
-
-      serverName = refineryHost;
-    };
-  };
-
   # run refinery container as a systemd service
   virtualisation.oci-containers.containers = {
     refinery = {
@@ -45,6 +18,29 @@
         REFINERY_MODEL_GENERATION_TIMEOUT_SEC = "60";
         REFINERY_MODEL_GENERATION_THREAD_COUNT = "50";
       };
+    };
+  };
+
+  # serve behind reverse proxy
+  services.nginx = {
+    virtualHosts.${refineryHost} = {
+      locations."${refineryBaseUrl}/" = {
+        proxyPass = "http://127.0.0.1:8888/";
+        proxyWebsockets = true;
+        extraConfig = ''
+          charset UTF-8;
+          more_set_headers 'Server: NIXOS';
+        '';
+      };
+      locations."${refineryBaseUrl}/api/" = {
+        proxyPass = "http://127.0.0.1:8888/api/";
+        extraConfig = ''
+          chunked_transfer_encoding off;
+          proxy_buffering off;
+          proxy_cache off;
+        '';
+      };
+      serverName = refineryHost;
     };
   };
 }

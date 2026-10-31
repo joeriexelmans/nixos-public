@@ -6,15 +6,13 @@
   imports =
     [ # Include the results of the hardware scan.
       ./hardware-configuration.nix
+
+      ../../modules/desktop.nix
     ];
 
   # Use the systemd-boot EFI boot loader.
   boot.loader.systemd-boot.enable = true;
   boot.loader.efi.canTouchEfiVariables = true;
-
-  # Use latest kernel.
-  boot.kernelPackages = pkgs.linuxPackages_latest;
-
   nix.settings.experimental-features = [ "nix-command" "flakes" ];
 
   networking.hostName = "msdl-nixos"; # Define your hostname.
@@ -23,78 +21,15 @@
   # Set your time zone.
   time.timeZone = "Europe/Brussels";
 
-  # Select internationalisation properties.
-  i18n.defaultLocale = "en_US.UTF-8";
-  console = {
-    font = "Lat2-Terminus16";
-    useXkbConfig = true; # use X keyboard config (xserver.xkb.options) in tty.
-  };
-
   # Configure keymap in X11
   services.xserver.xkb.layout = "us";
   services.xserver.xkb.options = "eurosign:e,caps:escape";
-
-  # Enable sound.
-  services.pipewire = {
-    enable = true;
-    pulse.enable = true;
-  };
 
   # Enable GNOME
   services.xserver.displayManager.gdm.enable = true;
   services.xserver.desktopManager.gnome.enable = true;
 
-  users.users = {
-    maestro = {
-      isNormalUser = true;
-      extraGroups = [ "wheel" ];
-    };
-    hv = {
-      isNormalUser = true;
-      extraGroups = [ "wheel" ];
-    };
-    rakshit = {
-      isNormalUser = true;
-      extraGroups = [ "wheel" ];
-    };
-  };
-
-  environment.systemPackages = with pkgs; [
-    vim
-    firefox
-    git
-  ];
-
-  # Some programs need SUID wrappers, can be configured further or are
-  # started in user sessions.
-  # programs.mtr.enable = true;
-  # programs.gnupg.agent = {
-  #   enable = true;
-  #   enableSSHSupport = true;
-  # };
-
-  services.openssh.enable = true;
-
   networking.firewall.enable = false;
-
-  services.nginx = {
-    enable = true;
-    
-    recommendedGzipSettings = true;
-    recommendedOptimisation = true;
-    recommendedProxySettings = true;
-    recommendedTlsSettings = true;
-
-    virtualHosts."msdl-testing.uantwerpen.be" = {
-      forceSSL = true;
-      sslCertificate = "/var/ssl_keys/msdl-testing.pem";
-      sslCertificateKey = "/var/ssl_keys/msdl-testing.key";
-      extraConfig = ''
-        ssl_password_file "/var/ssl_keys/msdl-testing.passwd";
-      '';
-    };
-  };
-
 
   # This last option defines the first version of NixOS you have installed on this particular machine,
   # and is used to maintain compatibility with application data (e.g. databases) created on older NixOS versions.
@@ -114,5 +49,4 @@
   #
   # For more information, see `man configuration.nix` or https://nixos.org/manual/nixos/stable/options#opt-system.stateVersion .
   system.stateVersion = "25.05"; # Did you read the comment?
-
 }

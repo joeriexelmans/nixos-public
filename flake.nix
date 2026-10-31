@@ -4,49 +4,44 @@
   inputs = {
     nixpkgs-stable.url = "github:nixos/nixpkgs?ref=nixos-26.05";
     nixpkgs-unstable.url = "github:nixos/nixpkgs?ref=nixos-unstable";
-    sops-nix = {
-      url = "github:Mic92/sops-nix";
-      inputs.nixpkgs.follows = "nixpkgs-stable";
-    };
-    icomidal = {
-      url = "git+https://deemz.org/git/joeri/icomidal";
-      inputs.nixpkgs.follows = "nixpkgs-stable";
+    # sops-nix = {
+    #   url = "github:Mic92/sops-nix";
+    #   inputs.nixpkgs.follows = "nixpkgs-stable";
+    # };
+    # icomidal = {
+    #   url = "git+https://deemz.org/git/joeri/icomidal";
+    #   inputs.nixpkgs.follows = "nixpkgs-stable";
+    # };
+    secrets = {
+      url = "git+ssh://forgejo@deemz.org/joeri/nixos-secrets.git";
     };
   };
 
-  outputs = { self, nixpkgs-stable, nixpkgs-unstable, sops-nix, icomidal }:
+  outputs = { self, nixpkgs-stable, nixpkgs-unstable, secrets }:
     let 
       system = "x86_64-linux";
     in {
       nixosConfigurations = {
-        t14 = nixpkgs-stable.lib.nixosSystem {
+        x230 = nixpkgs-stable.lib.nixosSystem {
           specialArgs = { inherit system; };
           modules = [
-            ./t14/configuration.nix
+            ./machines/x230/configuration.nix
           ];
         };
         deemz = nixpkgs-stable.lib.nixosSystem {
           specialArgs = {
             inherit system;
-            icomidal=icomidal.packages.${system}.default;
-            #refineryHost = "deemz.org";
-            #refineryBaseUrl = "/refinery";
-            sops-nix = sops-nix;
           };
           modules = [
-            ./deemz.org/configuration.nix
-            #./common/refinery.nix
+            ./machines/deemz/configuration.nix
           ];
         };
         msdl = nixpkgs-stable.lib.nixosSystem {
           specialArgs = {
             inherit system;
-            refineryHost="msdl-testing.uantwerpen.be";
-            refineryBaseUrl="/refinery";
           };
           modules = [
-            ./msdl/configuration.nix
-            ./common/refinery.nix
+            ./machines/msdl/configuration.nix
           ];
         };
       };
