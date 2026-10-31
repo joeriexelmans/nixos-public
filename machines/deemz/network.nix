@@ -1,4 +1,4 @@
-{ config, ipv4Addr, ipv6Addr, ipv4Subnet, ipv6Subnet ... }:
+{ config, ipv4Addr, ipv6Addr, ipv4Subnet, ipv6Subnet, ... }:
 {
   networking.hostName = "seedbox"; # Define your hostname.
   networking.domain = "deemz.org";
@@ -14,7 +14,6 @@
     ];
     ipv6.addresses = [
       {
-        # address = "2a02:578:8591:1b00::ffff";
         address = ${ipv6Addr};
         prefixLength = 64;
       }
