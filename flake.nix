@@ -13,7 +13,7 @@
     #   inputs.nixpkgs.follows = "nixpkgs-stable";
     # };
     secrets = {
-      url = "git+ssh://forgejo@deemz.org/joeri/nixos-secrets.git";
+      url = "git+ssh://forgejo@deemz.org/joeri/nixos-secrets";
     };
   };
 

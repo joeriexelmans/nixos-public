@@ -47,11 +47,11 @@
         "rev": "f3e12a0e7d5ce79a6cb14959e24e1ce4a9605e56",
         "revCount": 3,
         "type": "git",
-        "url": "ssh://forgejo@deemz.org/joeri/nixos-secrets.git"
+        "url": "ssh://forgejo@deemz.org/joeri/nixos-secrets"
       },
       "original": {
         "type": "git",
-        "url": "ssh://forgejo@deemz.org/joeri/nixos-secrets.git"
+        "url": "ssh://forgejo@deemz.org/joeri/nixos-secrets"
       }
     }
   },
