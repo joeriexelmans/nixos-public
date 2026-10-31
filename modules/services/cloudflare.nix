@@ -1,4 +1,4 @@
-{ config, cloudflareToken, ... }:
+{ config, pkgs, cloudflareToken, ... }:
 let
   deemz = {
     zone_id = "5db5e28fdb4abbc3f55cf2fcab6770c1";

@@ -41,11 +41,11 @@
     },
     "secrets": {
       "locked": {
-        "lastModified": 1793396782,
-        "narHash": "sha256-0UWe/nxSvRZP+Jg8fmsbuEoIHuY8o9Qm7vn9Pc3eHPA=",
+        "lastModified": 1793441194,
+        "narHash": "sha256-kMCH0QhdN5CmRuFDI3DN8eiZ2v4ikBHXyEjhtlOzKRA=",
         "ref": "refs/heads/master",
-        "rev": "4d2fa5a700778970a2f8ffcfd569d1d870d4eaf4",
-        "revCount": 2,
+        "rev": "f3e12a0e7d5ce79a6cb14959e24e1ce4a9605e56",
+        "revCount": 3,
         "type": "git",
         "url": "ssh://forgejo@deemz.org/joeri/nixos-secrets.git"
       },

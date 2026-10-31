@@ -8,7 +8,7 @@ let
       disable_symlinks off;
       more_set_headers 'Server: NIXOS';
       more_set_headers 'Access-Control-Allow-Origin: *';
-    '' + (builtins.readFile ./nginx-block-ai-bots.conf);
+    '' + (builtins.readFile ../../assets/nginx-block-ai-bots.conf);
   };
   goaccess = (pkgs.goaccess.override {
     withGeolocation = true;
@@ -45,7 +45,7 @@ in
 
   networking.firewall = {
     allowedTCPPorts = [ 80 443 ];
-  }
+  };
 
   # Run goaccess script hourly
   systemd.timers.goaccess = {

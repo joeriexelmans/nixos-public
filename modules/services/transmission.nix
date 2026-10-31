@@ -1,7 +1,8 @@
-{ config, transmissionHost, basicAuth, ... }:
+{ config, pkgs, transmissionHost, basicAuth, ... }:
 {
   services.transmission = {
     enable = true;
+    package = pkgs.transmission_4;
     settings = {
       peer-port = 51413;
       rpc-enabled = true;
@@ -26,8 +27,8 @@
         proxyPass = "http://127.0.0.1:9091/transmission/rpc";
         proxyWebsockets = true;
       };
-    }
-  }
+    };
+  };
 
   networking.firewall = {
     enable = true;

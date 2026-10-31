@@ -1,6 +1,7 @@
-{ config, basicAuth, ... }:
+{ config, fileserverHost, basicAuth, ... }:
 {
   services.nginx = {
+    virtualHosts.${fileserverHost} = {
       root = "/schijf";
 
       locations."/" = {
@@ -25,5 +26,6 @@
           autoindex off;
         '';
       };
+    };
   };
 }

@@ -1,4 +1,4 @@
-{ config, ipv4Addr, ipv6Addr, ipv4Mask, ipv6Mask ... }:
+{ config, ipv4Addr, ipv6Addr, ipv4Subnet, ipv6Subnet ... }:
 {
   networking.hostName = "seedbox"; # Define your hostname.
   networking.domain = "deemz.org";
@@ -41,15 +41,10 @@
     
     # Accept all traffic from local network:
     extraCommands = ''
-      # iptables -A nixos-fw -p tcp --source 192.168.1.0/24 -j nixos-fw-accept
-      # iptables -A nixos-fw -p udp --source 192.168.1.0/24 -j nixos-fw-accept
-      # ip6tables -A nixos-fw -p tcp --source 2A02:578:8591:1B00::/64 -j nixos-fw-accept
-      # ip6tables -A nixos-fw -p udp --source 2A02:578:8591:1B00::/64 -j nixos-fw-accept
-
-      iptables -A nixos-fw -p tcp --source ${ipv4Mask} -j nixos-fw-accept
-      iptables -A nixos-fw -p udp --source ${ipv4Mask} -j nixos-fw-accept
-      ip6tables -A nixos-fw -p tcp --source ${ipv6Mask} -j nixos-fw-accept
-      ip6tables -A nixos-fw -p udp --source ${ipv6Mask} -j nixos-fw-accept
+      iptables -A nixos-fw -p tcp --source ${ipv4Subnet} -j nixos-fw-accept
+      iptables -A nixos-fw -p udp --source ${ipv4Subnet} -j nixos-fw-accept
+      ip6tables -A nixos-fw -p tcp --source ${ipv6Subnet} -j nixos-fw-accept
+      ip6tables -A nixos-fw -p udp --source ${ipv6Subnet} -j nixos-fw-accept
     '';
   };
 }
