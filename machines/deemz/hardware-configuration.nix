@@ -14,20 +14,41 @@
   boot.extraModulePackages = [ ];
 
   fileSystems."/" =
-    { device = "/dev/disk/by-uuid/cb7a28e2-24d0-4156-8164-19f1e2208985";
-      fsType = "ext4";
+    { device = "/dev/disk/by-uuid/dbe31b72-741d-495a-b9de-6577d9c9f9d1";
+      fsType = "btrfs";
+    };
+
+  fileSystems."/nix" =
+    { device = "/dev/disk/by-uuid/dbe31b72-741d-495a-b9de-6577d9c9f9d1";
+      fsType = "btrfs";
+      options = [ "subvol=nix" ];
+    };
+
+  fileSystems."/home" =
+    { device = "/dev/disk/by-uuid/dbe31b72-741d-495a-b9de-6577d9c9f9d1";
+      fsType = "btrfs";
+      options = [ "subvol=home" ];
     };
 
   fileSystems."/boot" =
-    { device = "/dev/disk/by-uuid/2496-3A5D";
+    { device = "/dev/disk/by-uuid/1E73-CBF6";
       fsType = "vfat";
-      options = [ "fmask=0022" "dmask=0022" ];
+      options = [ "fmask=0077" "dmask=0077" ];
+    };
+
+  #fileSystems."/var/lib/docker/rootfs/overlayfs/6ca9328a835f52a542a7250a11c951437a46530cec0873eaeb8ad0d9908e6d3b" =
+  #  { device = "overlay";
+  #    fsType = "overlay";
+  #  };
+
+  fileSystems."/schijf" =
+    { device = "/dev/disk/by-uuid/92deaa25-7b42-4fc3-8019-79771fc8a721";
+      fsType = "btrfs";
     };
 
   swapDevices =
-    [ { device = "/dev/disk/by-uuid/23382524-af2d-453e-acb4-1cf6a7083319"; }
+    [ { device = "/dev/disk/by-uuid/9c7b7af9-6584-43fb-acda-d3d46282d85c"; }
     ];
-
 
   nixpkgs.hostPlatform = lib.mkDefault "x86_64-linux";
   hardware.cpu.intel.updateMicrocode = lib.mkDefault config.hardware.enableRedistributableFirmware;
