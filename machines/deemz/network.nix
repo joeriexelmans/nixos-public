@@ -26,11 +26,12 @@
   #  interface = "enp1s0";
   #};
   networking.nameservers = [ "1.1.1.1" ];
+
+  # Note: these entries will be used by dnsmasq!
   networking.extraHosts = ''
-    127.0.0.1  deemz.org  joeri-exelmans.page
-    ::1  deemz.org  joeri-exelmans.page
+    ${ipv4Addr}  deemz.org  joeri-exelmans.page
+    ${ipv6Addr}  deemz.org  joeri-exelmans.page
   '';
-    # 2a02:578:8591:1b00::ffff mstro.duckdns.org
   networking.networkmanager.unmanaged = [ "enp1s0" ];
 
   # IPv6 is enabled, meaning we're not protected by NAT -> enable firewall
