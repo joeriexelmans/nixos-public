@@ -27,10 +27,6 @@
       locations."${refineryBaseUrl}/" = {
         proxyPass = "http://127.0.0.1:8888/";
         proxyWebsockets = true;
-        extraConfig = ''
-          charset UTF-8;
-          more_set_headers 'Server: NIXOS';
-        '';
       };
       locations."${refineryBaseUrl}/api/" = {
         proxyPass = "http://127.0.0.1:8888/api/";

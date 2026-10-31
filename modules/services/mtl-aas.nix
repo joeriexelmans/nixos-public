@@ -28,10 +28,6 @@
     virtualHosts.${mtlAasHost} = {
       locations."${mtlAasBaseUrl}/" = {
         proxyPass = "http://127.0.0.1:15478/";
-        extraConfig = ''
-          charset UTF-8;
-          more_set_headers 'Server: NIXOS';
-        '';
       };
       serverName = mtlAasHost;
     };
