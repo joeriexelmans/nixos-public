@@ -15,7 +15,7 @@
         extraConfig = ''
           autoindex on;
         '';
-      }
+      };
     };
   };
 }
