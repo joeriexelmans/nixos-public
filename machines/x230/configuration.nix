@@ -8,6 +8,7 @@
       ./hardware-configuration.nix
 
       ../../modules/desktop.nix
+      # ../../modules/config/niri.nix
       ../../modules/config/touchpad.nix
     ];
 
@@ -87,8 +88,8 @@
   # firmware updates
   services.fwupd.enable = true;
 
-  environment.systemPackages = [
-    pkgs.solaar
+  environment.systemPackages = with pkgs; [
+    solaar
   ];
 
   environment.sessionVariables =  {
