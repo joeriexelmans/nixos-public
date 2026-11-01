@@ -5,7 +5,7 @@
       forceSSL = true;
       enableACME = true;
       locations."/" = {
-        root = "/schijf/public/homepage/";
+        root = "/schijf/homepage/";
       };
     };
   };
