@@ -28,6 +28,12 @@
             ./machines/x230/configuration.nix
           ];
         };
+        x13 = nixpkgs-stable.lib.nixosSystem {
+          specialArgs = { inherit system; };
+          modules = [
+            ./machines/x13/configuration.nix
+          ];
+        };
         deemz = nixpkgs-stable.lib.nixosSystem {
           specialArgs = {
             inherit system;
