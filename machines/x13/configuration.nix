@@ -18,6 +18,8 @@
   boot.loader.systemd-boot.enable = true; 
   boot.loader.efi.canTouchEfiVariables = true;
 
+  boot.kernelPackages = pkgs.linuxPackages_latest;
+
   networking.hostName = "x13"; # Define your hostname.
   # networking.wireless.enable = true; # Enables wireless support via 
   # wpa_supplicant.
@@ -30,6 +32,8 @@
 
   # Select internationalisation properties.
   i18n.defaultLocale = "en_US.UTF-8";
+
+  services.fwupd.enable = true;
 
   # Enable the GNOME Desktop Environment.
   services.displayManager.gdm.enable = true; 
@@ -54,13 +58,6 @@
     pulse.enable = true;
     jack.enable = true;
   };
-
-  # Define a user account. Don't forget to set a password with ‘passwd’.
-  #users.users."maestro" = {
-  #  isNormalUser = true;
-  #  description = "maestro"; 
-  #  extraGroups = [ "networkmanager" "wheel" ];
-  #};
 
   services.locate.enable = true;
   services.flatpak.enable = true;

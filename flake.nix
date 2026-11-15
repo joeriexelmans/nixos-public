@@ -3,7 +3,13 @@
 
   inputs = {
     nixpkgs-stable.url = "github:nixos/nixpkgs?ref=nixos-26.05";
-    nixpkgs-unstable.url = "github:nixos/nixpkgs?ref=nixos-unstable";
+    # nixpkgs-unstable.url = "github:nixos/nixpkgs?ref=nixos-unstable";
+
+    nixos-hardware = {
+      url = "github:NixOS/nixos-hardware";
+      inputs.nixpkgs.follows = "nixpkgs-stable";
+    };
+
     # sops-nix = {
     #   url = "github:Mic92/sops-nix";
     #   inputs.nixpkgs.follows = "nixpkgs-stable";
@@ -17,7 +23,7 @@
     };
   };
 
-  outputs = { self, nixpkgs-stable, nixpkgs-unstable, secrets }:
+  outputs = { self, nixpkgs-stable, nixos-hardware, secrets }:
     let 
       system = "x86_64-linux";
     in {
@@ -31,6 +37,7 @@
         x13 = nixpkgs-stable.lib.nixosSystem {
           specialArgs = { inherit system; };
           modules = [
+            nixos-hardware.nixosModules.lenovo-thinkpad-x13-amd
             ./machines/x13/configuration.nix
           ];
         };
