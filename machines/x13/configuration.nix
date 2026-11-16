@@ -9,6 +9,7 @@
       ./hardware-configuration.nix
 
       ../../modules/desktop.nix
+      ../../modules/config/eduroam.nix
     ];
 
   nix.settings.experimental-features = ["nix-command" "flakes"];

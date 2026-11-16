@@ -10,6 +10,7 @@
       ../../modules/desktop.nix
       # ../../modules/config/niri.nix
       ../../modules/config/touchpad.nix
+      ../../modules/config/eduroam.nix
     ];
 
   nix.settings.experimental-features = [ "nix-command" "flakes" ];

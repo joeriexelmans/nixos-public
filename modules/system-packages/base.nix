@@ -18,6 +18,7 @@
 
     gnome-calculator
     gnome-disk-utility
+    gnome-tweaks
 
     nix-index
     nix-tree # really useful package for searching, figuring out why something's a dependency, etc.
