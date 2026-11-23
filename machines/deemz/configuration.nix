@@ -31,6 +31,7 @@
       # ../../modules/services/plantuml.nix
       # ../../modules/services/refinery.nix
       ../../modules/services/sshd.nix
+      ../../modules/services/statebuddy-redirect.nix
       ../../modules/services/transmission.nix
     ];
 
