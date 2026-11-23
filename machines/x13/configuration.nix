@@ -65,6 +65,13 @@
 
   networking.firewall.enable = false;
 
+  # don't wakeup from suspend from USB (e.g., mouse move)
+  services.udev.extraRules = ''
+    ACTION=="add", SUBSYSTEM=="usb", DRIVERS=="usb", ATTR{power/wakeup}="disabled"
+  '';
+  services.udev.packages = with pkgs; [ gnome-settings-daemon ];
+
+
   # This option defines the first version of NixOS you have installed on 
   # this particular machine, and is used to maintain compatibility with 
   # application data (e.g. databases) created on older NixOS versions.
