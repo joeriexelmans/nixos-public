@@ -1,7 +1,7 @@
 { config, pkgs, ... }:
 {
   nixpkgs.config.permittedInsecurePackages = [
-    "openssl-1.1.1w" # needed for Sublime Text 4
+    # "openssl-1.1.1w" # needed for Sublime Text 4
   ];
 
   environment.systemPackages = with pkgs; [
@@ -9,7 +9,7 @@
 
     vscode
 
-    sublime4
+    # sublime4
     sublime-merge
 
     graphviz
