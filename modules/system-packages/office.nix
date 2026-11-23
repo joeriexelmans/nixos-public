@@ -7,9 +7,9 @@
     hunspellDicts.en-us
     hunspellDicts.en-us-large
     pdfarranger # useful tool to rearrange / split / merge PDF documents
-    (texlive.combine {
-      inherit (texlive) scheme-small
-      awesomebox fontawesome5;
-    })
+    # (texlive.combine {
+    #   inherit (texlive) scheme-small
+    #   awesomebox fontawesome5;
+    # })
   ];
 }
